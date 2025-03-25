@@ -1,0 +1,229 @@
+div#container {
+  margin: 0 auto 0 auto;
+  /* width: 100%;
+  max-width: 100%; */
+  max-width: 60em;
+  padding: 0.1em 0.1em 0.1em 0.1em;
+}
+
+div#preview {
+  border-bottom: 1px solid #eee;
+  margin: 0 0 0.5em 0;
+  padding: 0 0 0.5em 0;
+}
+
+div#preview>div {
+  display: inline-block;
+  vertical-align: top;
+  width: calc(45% - 10px);
+}
+
+div#local {
+  margin: 0 10px 0 0;
+}
+
+
+div#select, select#avatarList {
+  margin: 0.2em;
+}
+
+/* div#select, div#codecPreferences {
+  margin: 1em;
+} */
+
+#player {
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: #323232;
+}
+#playerButtons {
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: #323232;
+}
+
+#player:before {
+  content: "";
+  display: block;
+  padding-top: 66%;
+}
+
+
+/* #playButton {
+  width: 15%;
+  max-width: 200px;
+  cursor: pointer;
+} */
+
+#refreshAvatarListButton {
+  width: 20px;
+  max-width: 20px;
+  cursor: pointer;
+}
+
+
+#onoffLightButton {
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  width: 32px;
+  height: 32px;
+  background-color: #4CAF50;
+  /* Green */
+  border: none;
+  color: white;
+  /* padding: 15px 32px; */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 8px;
+}
+
+#upButton {
+  position: absolute;
+  bottom: 42px;
+  left: calc((100% / 2) - 16px);
+  width: 32px;
+  height: 32px;
+}
+#downButton {
+  position: absolute;
+  bottom: 5px;
+  left: calc((100% / 2) - 16px);
+  width: 32px;
+  height: 32px;
+}
+#leftButton {
+  position: absolute;
+  bottom: 5px;
+  left: calc((100% / 2) - 53px);
+  width: 32px;
+  height: 32px;
+}
+#rightButton {
+  position: absolute;
+  bottom: 5px;
+  left: calc((100% / 2) + 21px);
+  width: 32px;
+  height: 32px;
+}
+
+
+#greenButton {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 160px;
+  background-color: #4CAF50;
+  /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#blueButton {
+  position: absolute;
+  bottom: 10px;
+  left: 180px;
+  width: 160px;
+  background-color: #447FAF;
+  /* Blue */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#orangeButton {
+  position: absolute;
+  bottom: 10px;
+  left: 350px;
+  width: 160px;
+  background-color: #FF7700;
+  /* Blue */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#fullscreenButton {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  width: 32px;
+  height: 32px;
+}
+
+
+div.box {
+  margin: 0.2em;
+}
+
+button {
+  margin: 2px 2px 0 0;
+  width: 130px;
+}
+
+#joy1Div
+{
+	width:200px;
+	height:200px;
+	margin:10px
+}
+#joystick
+{
+	border: 1px solid #FF0000;
+}
+
+
+.row
+{
+  width: 100%;
+	display: inline-flex;
+	clear: both;
+  align-items: center;
+  justify-content: center;
+}
+.columnTopLR
+{
+  width: 50%;
+}
+.columnPos
+{
+  text-align: right;
+  width: 40%;
+}
+.columnBtn
+{
+  text-align: center;
+  width: 10%;
+}
+.columnJoy
+{
+  display: flex;
+  justify-content: center;
+  width: 50%;
+}

@@ -1,0 +1,23 @@
+[
+    {
+        "name": "signaling-server",
+        "protocol": "sftp",
+        "host": "13.213.87.128",
+        "username": "ubuntu",
+        "privateKeyPath": "/Users/idevkim/.ssh/aws-keypair-idevkim002-sg.pem",
+        "remotePath": "/home/ubuntu/signaling-server",
+        "uploadOnSave": false,        
+        "context": "./signaling-server/bundle",
+        "ignore": [
+            "**/.vscode",
+            "**/.github",
+            "**/.git",
+            "**/.DS_Store",
+            "**/.sftp.json",
+            "**/.env",
+            "**/dist",
+            "**/logs",
+            "**/node_modules"
+        ]
+    }
+]

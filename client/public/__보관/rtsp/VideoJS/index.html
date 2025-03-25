@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+    <!-- <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet"> 
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script> -->
+    <!-- <script src="https://path/to/rtsp-plugin.js"></script> -->
+     <!-- Assuming an RTSP plugin is used -->
+
+
+
+     <!-- 오리지날  -->
+     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.8.1/video-js.min.css" rel="stylesheet">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.8.1/video.min.js"></script> -->
+
+
+
+<!-- html5_rtsp_player -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+     <link rel="stylesheet" href="style.css">
+ 
+     <link href="https://vjs.zencdn.net/7.2.3/video-js.css" rel="stylesheet">
+     <script src="https://vjs.zencdn.net/7.2.3/video.js"></script>
+ 
+     <!--<link rel="stylesheet" href="../node_modules/video.js/dist/video-js.min.css">-->
+     <!--<script src="../node_modules/video.js/dist/video.js"></script>-->
+     <script src="streamedian.videojs.min.js"></script>
+
+
+
+
+
+    <title>RTSP Player</title>
+  </head>
+  <body>
+
+    <!-- <video id="my-video" class="video-js vjs-default-skin" webkit-playsinline></video> -->
+    
+    <!-- <video id="myPlayer" class="video-js vjs-default-skin" webkit-playsinline>
+    </video> -->
+
+
+    <video id="test_video" class="video-js vjs-default-skin" height="360" width="640" controls preload="none" autoplay>
+    </video>
+
+
+    <script>
+      // var player = videojs("myPlayer", {
+      //       sources : [
+      //         { src : "https://wtnpyesmhqvw68558.cdn.gov-ntruss.com/ibk/ETC/0001/wPiu5twj8ZtdcIuGeTyu.mp4", type : "video/mp4"},
+      //         // { src : "rtsp://172.16.3.130:8554/mjpeg/1", type : "application/x-rtsp" }
+      //         // { src : "rtsp://807e9439d5ca.entrypoint.cloud.wowza.com:1935/app-rC94792j/068b9c9a_stream2", type : "application/x-rtsp" }
+      //         { src : "rtsp://210.99.70.120:1935/live/cctv001.stream", type : "application/x-rtsp" }
+      //       ],
+      //       poster : "https://wtnpyesmhqvw68558.cdn.gov-ntruss.com/ibk/ETC/0001/DPPWiqhOJcbxr1ZgVHFc.png",
+      //       controls : true,
+      //       playsinline : true,
+      //       muted : true,
+      //       preload : "metadata",
+      //       controlBar : {
+      //           playToggle : false,
+      //           pictureInPictureToggle : false,
+      //           remainingTimeDisplay : false,
+      //           progressControl : false,
+      //       }
+      //   });
+
+
+        var videojsPlayer = videojs('#test_video', {
+          streamedian_player_config: {
+              socket: "ws://127.0.0.1:8080/ws/",
+              bufferDuration: 120,
+          }
+        });
+        videojsPlayer.src(
+          // {src: newSource, type: "application/x-rtsp"}
+              { src : "https://wtnpyesmhqvw68558.cdn.gov-ntruss.com/ibk/ETC/0001/wPiu5twj8ZtdcIuGeTyu.mp4", type : "video/mp4"}
+              // { src : "rtsp://172.16.3.130:8554/mjpeg/1", type : "application/x-rtsp" }
+              // { src : "rtsp://807e9439d5ca.entrypoint.cloud.wowza.com:1935/app-rC94792j/068b9c9a_stream2", type : "application/x-rtsp" }
+              // { src : "rtsp://210.99.70.120:1935/live/cctv001.stream", type : "application/x-rtsp" }
+
+        );
+        videojsPlayer.play();
+    </script>
+
+   
+    <!-- <video id="my-video" class="video-js" controls preload="auto" width="640" height="264"> -->
+      <!-- <source src="rtsp://172.16.3.130:8554/mjpeg/1" type="application/x-rtsp"> -->
+      <!-- <source src="rtsp://wowzaec2demo.streamlock.net/vod/mp4:bigbuckbunny_115k.mov" type="application/x-rtsp"> -->
+      <!-- <source src="rtsp://210.99.70.120:1935/live/cctv001.stream" type="application/x-rtsp"> -->
+      <!-- <source src="rtsp://807e9439d5ca.entrypoint.cloud.wowza.com:1935/app-rC94792j/068b9c9a_stream2" type="application/x-rtsp"> -->
+    <!-- </video>         -->
+
+    <!-- <script>
+      
+      ngOnInit()
+
+      function ngOnInit() {
+        const player = videojs('my-video', {
+          html5: {
+            hls: {
+              withCredentials: true
+            }
+          }
+        });
+        
+        player.src({
+          src: 'rtsp://your-rtsp-stream-url',
+          type: 'application/x-rtsp'
+        });
+        
+        player.play();
+      }
+    </script> -->
+    <!-- <script type="module" src="js/main.js"></script> -->
+  </body>
+</html>

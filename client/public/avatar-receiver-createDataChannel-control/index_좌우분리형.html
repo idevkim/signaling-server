@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- <link rel="stylesheet" href="css/joystick.css">
+  <link rel="stylesheet" href="css/demo.css">   -->
+
+  <link rel="stylesheet" href="css/joy.css">  
+
+  <title>Avatar Receiver</title>
+</head>
+
+<body>
+  <div id="container">
+
+    <span id="result"></span>
+    
+    <!-- <h2>Avatar Receiver CreateDataChannel control Sample</h2> -->
+    <div id="preview">
+      <div id="local">
+        <h2>Message</h2>
+        <div id="webrtcEvent"></div>
+        <div id="message"></div>
+
+        
+      </div>
+
+      <div id="remote">
+        <h2>Local User</h2>
+
+        <div id="select">
+          <label for="avatarList">Avatar ID: </label>
+          <select id="avatarList" autocomplete="off"></select>
+          <img id="refreshAvatarListButton" src="../../images/Refresh.png" alt="refresh Avatar List" />
+        </div>
+    
+        <div class="box">
+          <!-- <span>Connection ID:</span>
+          <textarea id="textForConnectionId"></textarea> -->
+          <!-- <div id="status"></div> -->
+          <!-- <button type="button" id="setUpButton" autocomplete="off">Set Up</button> -->
+          <button id="connectButton" type="button" autocomplete="on"  disabled>Connect</button>
+          <button id="hangUpButton"  type="button" autocomplete="off" disabled>Hang Up</button>
+        </div>    
+        <!-- <div id="localVideoStats"></div> -->
+        <!-- <video id="localVideo" playsinline autoplay muted=true></video> -->
+        <div id="player"></div>
+        
+        <!-- <div id="joystickRoot"></div> -->
+        <!-- <div id="joy1Div" style="width:200px;height:200px;margin:50px"></div> -->
+
+        <div id="playerButtons">
+          <button id="onoffLightButton" type="button">L</button>
+          <img id="upButton"    src="../../images/up.png"   />
+          <img id="downButton"  src="../../images/down.png" />
+          <img id="leftButton"  src="../../images/left.png" />
+          <img id="rightButton" src="../../images/right.png"/>
+        </div>
+
+
+        <!-- <div id="playerButtons">
+          <button id="onoffLightButton" type="button">L</button>
+          <img id="upButton"    src="../../images/up.png"   />
+          <img id="downButton"  src="../../images/down.png" />
+          <img id="leftButton"  src="../../images/left.png" />
+          <img id="rightButton" src="../../images/right.png"/>
+        </div> -->
+
+
+        <!-- <section class="joystick-state">No action detected</section>
+        <section class="joystick-container"></section> -->
+
+
+      </div>
+    </div>
+
+
+    <!-- <div id="player"></div> -->
+
+    <!-- <div class="box">
+      <span>Codec preferences:</span>
+      <select id="codecPreferences" autocomplete="off" disabled>
+        <option selected value="">Default</option>
+      </select>
+    </div> -->
+
+    <div id="warning"></div>
+
+    <!-- <div class="box">
+      <label>Codec preferences: </label>
+      <select id="codecPreferences" autocomplete="off" disabled>
+        <option selected value="">Default</option>
+      </select>
+    </div> -->
+    <div class="box">
+      <span>Lock Cursor to Player:</span>
+      <input type="checkbox" id="lockMouseCheck" autocomplete="off" />
+    </div>
+
+    <p>
+      For more information about sample, see <a
+        href="https://docs.unity3d.com/Packages/com.unity.renderstreaming@3.1/manual/sample-multiplay.html">Multiplay sample</a> document page.
+    </p>
+
+    <!-- <div id="message"></div> -->
+
+    <section>
+      <a href="https://github.com/Unity-Technologies/UnityRenderStreaming/tree/develop/WebApp/client/public/multiplay"
+        title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
+    </section>
+  </div>
+
+  <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="https://unpkg.com/event-target@latest/min.js"></script>
+  <script src="https://unpkg.com/resize-observer-polyfill@1.5.0/dist/ResizeObserver.global.js"></script>
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
+  <script src="./virtualjoystick.js"></script>
+
+
+  <!-- <script src="joystickAnalogControls.js"></script> -->
+
+
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

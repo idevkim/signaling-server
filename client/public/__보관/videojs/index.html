@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- <link rel="icon" href="../images/favicon.ico" type="image/x-icon"> -->
+  <!-- <link rel="stylesheet" href="../css/main.css" /> -->
+  <!-- <link rel="stylesheet" href="css/style.css" /> -->
+  <title>Bidirectional Sample</title>
+
+
+  <!-- Chang URLs to wherever Video.js files will be hosted -->
+  <!-- <link href="video-js.css" rel="stylesheet" type="text/css"> -->
+  <!-- video.js must be in the <head> for older IEs to work. -->
+  <!-- <script src="video.js"></script> -->
+
+  <!-- Unless using the CDN hosted version, update the URL to the Flash SWF -->
+  <!-- <script>
+    videojs.options.flash.swf = "video-js.swf";
+  </script> -->
+  <!-- <script src="media-stream-player.min.js"></script> -->
+  <!-- <script src="/media-stream-player.min.js"></script> -->
+  <link href="https://vjs.zencdn.net/8.16.0/video-js.css" rel="stylesheet" />
+
+</head>
+
+<body>
+  <div id="container">
+    <h1>video.js sample</h1>
+
+    <!-- <media-stream-player
+      hostname="rtsp://210.99.70.120:1935/live/cctv001.stream"
+      format="JPEG"
+      compression="10"
+      resolution="1920x1080"
+      rotation="0"
+      camera="1"
+      autoplay
+    /> -->
+
+    <!-- <video
+      id="my-player"
+      class="video-js"
+      controls
+      preload="auto"
+      poster="//vjs.zencdn.net/v/oceans.png"
+      data-setup='{}'>
+        <source src="//172.16.0.151:81/stream" type="image/jpeg"></source>
+        <p class="vjs-no-js">
+          To view this video please enable JavaScript, and consider upgrading to a
+          web browser that
+          <a href="https://videojs.com/html5-video-support/" target="_blank">
+            supports HTML5 video
+          </a>
+        </p>
+    </video> -->
+
+    <video
+    id="my-video"
+    class="video-js"
+    controls
+    preload="auto"
+    width="640"
+    height="264"
+    poster="../../images/Play.png"
+    data-setup="{}"
+  >
+    <!-- <source src="MY_VIDEO.mp4" type="video/mp4" /> -->
+    <source src="https://dl6.webmfiles.org/big-buck-bunny_trailer.webm" type="video/webm" />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank"
+        >supports HTML5 video</a
+      >
+    </p>
+  </video>    
+
+
+    <!-- <video id="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264"
+      poster="http://www.pageresource.com/wallpapers/wallpaper/bleach-ichigo-mugetsu-here-size-original_215405.jpg"
+      data-setup="{}"> -->
+  
+      <!-- <source src="//www.domain.com/live_manifest.m3u8" type="application/x-mpegURL"> -->
+      <!-- <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4"></source> -->
+      <!-- <source src="rtsp://210.99.70.120:1935/live/cctv001.stream" type="rtsp/mp4"></source> -->
+      <!-- <source src="rtsp://210.99.70.120:1935/live/cctv001.stream" type="application/x-mpegURL"></source> -->
+    <!-- </video>     -->
+
+<!-- <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4"></source> -->
+  <!-- <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4"></source> -->
+  <!--<track kind="captions" src="demo.captions.vtt" srclang="en" label="English"></track>--><!-- Tracks need an ending tag thanks to IE9 -->
+  <!--<track kind="subtitles" src="demo.captions.vtt" srclang="en" label="English"></track>--><!-- Tracks need an ending tag thanks to IE9 -->
+
+  <!-- <source src="http://172.16.0.151:81/stream" type='image/jpeg' /> -->
+  <!-- <source src="http://119.65.216.155:1935/live/cctv05.stream_360p/playlist.m3u8" type="application/x-mpegURL"></source> -->
+  <!-- <source src="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" type="application/x-mpegURL"></source> -->
+
+
+
+
+  </div>
+</body>
+
+<script src="https://vjs.zencdn.net/8.16.0/video.min.js"></script>
+<!-- <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="https://unpkg.com/event-target@latest/min.js"></script>
+<script src="https://unpkg.com/resize-observer-polyfill@1.5.0/dist/ResizeObserver.global.js"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
+<script type="module" src="js/main.js"></script> -->
+
+</body>
+
+</html>

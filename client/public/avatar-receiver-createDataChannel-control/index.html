@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Avatar Receiver</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../css/main.css" />
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<div id="container">
+			<div class="row">
+				<div class="columnTopLR">
+					<h2>Player</h2>
+					<div id="select">
+						<label for="avatarList">Avatar ID: </label>
+						<select id="avatarList" autocomplete="off"></select>
+						<button style="width: 20px;" id="refresh_room" type="button">R </button>
+						<!-- <button style="width: 20px;" id="join_room"    type="button" disabled>J</button> -->
+					</div>
+					<div class="box">
+						<button id="connectButton" type="button" autocomplete="on"  disabled>Connect</button>
+						<button id="disConnectButton"  type="button" autocomplete="off" disabled>disConnect</button>
+					</div>  
+				</div>
+				<div class="columnTopLR">
+					<div id="webrtcEvent"></div>
+					<div id="warning"></div>
+				</div>
+			</div>
+
+			<div id="message"></div>
+			
+			<div id="player"></div>
+					
+			<div class="row">
+				<div class="columnPos">
+					Timer :<input id="joy1Timer" type="text" /><br />
+					Posizione X:<input id="joy1PosizioneX" type="text" /><br />
+					Posizione Y:<input id="joy1PosizioneY" type="text" /><br />
+					Direzione:<input id="joy1Direzione" type="text" /><br />
+					X :<input id="joy1X" type="text" /></br>
+					Y :<input id="joy1Y" type="text" />
+					<div class="box">
+						<span>Lock Cursor to Player:</span>
+						<input type="checkbox" id="lockMouseCheck" autocomplete="off" />
+					</div>					
+				</div>
+
+				<div class="columnBtn">
+					<button style="width: 32px;" id="onoffLightButton" type="button">L</button>
+					<img 		style="width: 32px;" id="upButton"    src="../../images/up.png"    />
+					<img 		style="width: 32px;" id="downButton"  src="../../images/down.png" />
+					<img 		style="width: 32px;" id="leftButton"  src="../../images/left.png" />
+					<img 		style="width: 32px;" id="rightButton" src="../../images/right.png"/>
+				</div>	
+
+				<div class="columnJoy">
+					<div id="joy1Div"></div>
+				</div>
+			</div>
+			
+		</div>
+		<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+		<script src="https://unpkg.com/event-target@latest/min.js"></script>
+		<script src="https://unpkg.com/resize-observer-polyfill@1.5.0/dist/ResizeObserver.global.js"></script>
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>		
+		<script src="js/joy.js"></script>
+		<script type="module" src="js/main.js"></script>
+	</body>
+</html>

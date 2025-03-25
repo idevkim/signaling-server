@@ -1,0 +1,107 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/main.css" />
+  <title>Unity Render Streaming Samples</title>
+</head>
+
+<body>
+  <div id="container">
+    <h1>Unity Render Streaming Samples</h1>
+
+    <section>
+      <p>These are WebClient samples for use with <a href="https://docs.unity3d.com/Packages/com.unity.renderstreaming@latest/index.html">Unity Render
+          Streaming</a>.</p>
+    </section>
+
+    <section>
+      <h2>Server Configuration</h2>
+      <div id="startup"></div>
+    </section>
+
+    <section id="iceServers">
+      <h2>ICE servers</h2>
+      <select id="servers" size="4">
+      </select>
+      <div>
+          <label for="url">STUN or TURN URI:</label>
+          <input id="url">
+      </div>
+      <div>
+          <label for="username">TURN username:</label>
+          <input id="username">
+      </div>
+      <div>
+          <label for="password">TURN password:</label>
+          <input id="password">
+      </div>
+      <div>
+          <button id="add">Add Server</button>
+          <button id="remove">Remove Server</button>
+          <button id="reset">Reset to defaults</button>
+      </div>
+  </section>
+    <section>
+      <h2 id="avatar-sender"><a href="avatar-sender/index.html">Avatar Sender Sample</a></h2>
+      <h2 id="avatar-receiver"><a href="avatar-receiver/index.html">Avatar Receiver Sample</a></h2>
+    </section>
+    <section>
+      <h2 id="section2"><a href="avatar-receiver-createDataChannel/index.html">Avatar Receiver CreateDataChannel Sample</a></h2>
+      <h2 id="section2"><a href="avatar-receiver-createDataChannel-control/index.html">Avatar Receiver CreateDataChannel control Sample</a></h2>
+      <h2 id="section2"><a href="joysticks/joy/index.html">joystics-joy</a></h2>
+      <h2 id="section2"><a href="joysticks/demo/demo.html">joystic-demo</a></h2>
+      <h2 id="section2"><a href="joysticks/demo/demo-two.html">joystic-demo-two</a></h2>
+      <h2 id="section2"><a href="joysticks/virtual/index.html">joystic-virtual</a></h2>
+      <h2 id="section2"><a href="videos/videojs/index.html">video-videojs</a></h2>
+      <h2 id="section2"><a href="rtsp/rtsp_player_web/index.html">video-rtsp</a></h2>
+      <h2 id="section2"><a href="rtsp/VideoJS/index.html">video-rtsp-videojs</a></h2>
+      <h2 id="section2"><a href="rtsp/html5_rtsp_player/example/index.html">video-rtsp-streamedian</a></h2>
+      <h2 id="section2"><a href="rtsp/example_react_app/public/index.html">video-rtsp-example_react_app</a></h2>
+
+    </section>    
+    <section>
+      <h2 id="avatar-receiver"><a href="avatar-multiplay/index.html">Avatar MultiPlay Sample</a></h2>
+    </section>
+    <section>
+      <h2 id="avatar-videoplayer"><a href="avatar-videoplayer/index.html">Avatar VideoPlayer Sample</a></h2>
+    </section>
+    <section>
+      <h2 id="avatar-Bidirectional"><a href="avatar-bidirectional-avatar/index.html">Avatar Bidirectional Sample</a></h2>
+    </section>    
+    <section>
+      <h2 id="player-Bidirectional"><a href="avatar-bidirectional-player/index.html">Player Bidirectional Sample</a></h2>
+    </section>    
+
+    <section>
+      <h2 id="receiver"><a href="receiver/index.html">Receiver Sample</a></h2>
+      <p>This is a sample for receiving video / audio from Unity.</p>
+      <p>It can be used in combination with the <code>Broadcast</code> scene of Unity Render Streaming.</p>
+    </section>
+
+    <section>
+      <h2 id="bidirectional"><a href="bidirectional/index.html">Bidirectional Sample</a></h2>
+      <p>This is a sample for sending and receiving video in both directions.</p>
+      <p>It can be used in combination with the <code>Bidirectional</code> scene of Unity Render Streaming.</p>
+      <p>The WebApp must be running in Private mode.</p>
+    </section>
+
+    <section>
+      <h2 id="multiplay"><a href="multiplay/index.html">Multiplay Sample</a></h2>
+      <p>This sample connects as a Guest in the <code>Multiplay</code> scene of Unity Render Streaming.</p>
+    </section>
+
+    <section>
+      <h2 id="videoplayer"><a href="videoplayer/index.html">VideoPlayer Sample</a></h2>
+      <p>This is a sample to receive the camera image rendered on Unity. You can operate the camera in Unity from the
+        browser.</p>
+      <p>It can be used in combination with the <code>WebBrowserInput</code> scene of Unity Render Streaming.</p>
+      <p>The WebApp must be running in Public mode.</p>
+    </section>
+
+    <section>
+      <a href="https://github.com/Unity-Technologies/UnityRenderStreaming/tree/develop/WebApp" title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
+    </section>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>

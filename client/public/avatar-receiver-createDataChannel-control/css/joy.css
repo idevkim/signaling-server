@@ -1,0 +1,105 @@
+/* body
+{
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+
+
+  margin: 0 auto 0 auto;
+  max-width: 60em;
+  padding: 1em 1.5em 1.3em 1.5em;
+
+
+  word-break: break-word;
+  background-color: #8a6d3b;
+
+
+} */
+body {
+  margin: 0px;
+}
+
+div#container {
+  margin: 0 auto 0 auto;
+  max-width: 60em;
+  padding: 1em 1.5em 1.3em 1.5em;
+}
+
+video {
+  background: #222;
+  margin: 0 0 20px 0;
+  --width: 100%;
+  width: var(--width);
+  height: calc(var(--width) * 0.75);
+}
+
+
+.row
+{
+  width: 100%;
+	display: inline-flex;
+	clear: both;
+  align-items: center;
+  justify-content: center;
+}
+.columnPos
+{
+  text-align: right;
+  width: 40%;
+}
+.columnBtn
+{
+  text-align: center;
+  width: 10%;
+}
+.columnJoy
+{
+  display: flex;
+  justify-content: center;
+  width: 50%;
+}
+
+div.box {
+  margin: 0.5em;
+}
+
+#player {
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: #323232;
+  width: 90%;
+}
+
+#player:before {
+  content: "";
+  display: block;
+  padding-top: 66%;
+}
+
+#refreshAvatarListButton {
+  width: 20px;
+  max-width: 20px;
+  cursor: pointer;
+}
+
+#joy1Div
+{
+	width:200px;
+	height:200px;
+	margin:10px
+}
+#joystick
+{
+	border: 1px solid #FF0000;
+}
+
+#refreshAvatarListButton {
+  width: 20px;
+  max-width: 20px;
+  cursor: pointer;
+}
