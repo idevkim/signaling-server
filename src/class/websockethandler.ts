@@ -5,12 +5,10 @@ import Candidate from './candidate';
 let isPrivate: boolean;
 
 // [{sessonId:[connectionId,...]}]
-//const clients: Map<WebSocket, Set<string>> = new Map<WebSocket, Set<string>>();
+const clients: Map<WebSocket, Set<string>> = new Map<WebSocket, Set<string>>();
 
 // [{connectionId:[sessionId1, sessionId2]}]
-// const connectionPair: Map<string, [WebSocket, WebSocket]> = new Map<string, [WebSocket, WebSocket]>();
-//Map< roomName, [avatar, player, dashboard] > 아바타,플레이어,데쉬보드만! 많으면 속도문제 발생)
-//const rooms: Map<string, [WebSocket, WebSocket, WebSocket]> = new Map<string, [WebSocket, WebSocket, WebSocket]>();
+const connectionPair: Map<string, [WebSocket, WebSocket]> = new Map<string, [WebSocket, WebSocket]>();
 
 interface ISlot {
   ws: WebSocket;
@@ -24,9 +22,29 @@ function reset(mode: string): void {
 }
 
 function add(ws: WebSocket): void {
+  //초기화 : 기존접속이 있다 해도 초기화.
+  avatar 접속했을때 : 이미 방이 있다면 이상하니 접속되어있는 플레이어들을 지우기. => 방이름 필요.
+  player 접속했을때 : ??? 어떻게 처리??
+  rooms.set(null, [null, null, null]);
 }
 
 function remove(ws: WebSocket): void {
+}
+
+function remove(ws: WebSocket): void {
+  const connectionIds = clients.get(ws);
+  connectionIds.forEach(connectionId => {
+    const pair = connectionPair.get(connectionId);
+    if (pair) {
+      const otherSessionWs = pair[0] == ws ? pair[1] : pair[0];
+      if (otherSessionWs) {
+        otherSessionWs.send(JSON.stringify({ type: "disconnect", connectionId: connectionId }));
+      }
+    }
+    connectionPair.delete(connectionId);
+  });
+
+  clients.delete(ws);
 }
 
 function onReqAvatarList(ws: WebSocket): void {
@@ -153,7 +171,7 @@ function onCandidate(ws: WebSocket, msg: any): void {//1.ws::player, msg::data{c
 //player에서 data로 넘어옴
   if(ws.protocol == "player"){
     msg = msg.data;
-    return; //플레이어는 비디어 데이터를 보낼필요없으니... 굳이...
+    return; //플레이어는 비디오 데이터를 보낼필요없으니... 굳이...
   }
 
   console.log(`${ws.protocol}:${msg.id}:::onCandidate()`);    
