@@ -132,7 +132,7 @@ function onConnect(ws: WebSocket, msg: any): void {
 function connect_room(ws: WebSocket, id: string, who: string): void {
   if(who == "avatar") {
     if (rooms.has(id)) {//방이 이미 존재함.
-      send_error(ws, `${id}: This room already exists.`);
+      // send_error(ws, `${id}: This room already exists.`);
 
 
       //idevkim 일단 고~~ 추후 확인
