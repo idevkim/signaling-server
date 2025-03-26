@@ -14,38 +14,87 @@ interface ISlot {
   ws: WebSocket;
   who: string;
 }
+interface IInfo {
+  id: string;
+  who: string;
+}
 // const rooms: Map<string, Set<ISlot>> = new Map<string, Set<ISlot>>();
 const rooms: Map<string, [ISlot, ISlot, ISlot]> = new Map<string, [ISlot, ISlot, ISlot]>();
+//소켓이 접속한 방id를 기록. 비정상 종료시 처리하기위함.
+const webSockets: Map<WebSocket, IInfo> = new Map<WebSocket, IInfo>();
+
+function getOrCreateConnectionIds(websocket: WebSocket): Set<string> {
+  let roomId = null;
+  if (!clients.has(websocket)) {
+    roomId = new Set<string>();
+    clients.set(websocket, roomId);
+  }
+  roomId = clients.get(websocket);
+  return roomId;
+}
 
 function reset(mode: string): void {
   isPrivate = true;//mode == "private";
 }
 
 function add(ws: WebSocket): void {
-  //초기화 : 기존접속이 있다 해도 초기화.
-  avatar 접속했을때 : 이미 방이 있다면 이상하니 접속되어있는 플레이어들을 지우기. => 방이름 필요.
-  player 접속했을때 : ??? 어떻게 처리??
-  rooms.set(null, [null, null, null]);
+  // avatar 접속했을때 : 이미 방이 있다면 이상하니 접속되어있는 플레이어들을 지우기. => 방이름 필요.
+  // player 접속했을때 : 처리없음.
+  //초기화 : 기존접속이 있다면 처리(비정상종료) : 일단 플레이들 접속종료.
+  // const who = ws.protocol;
+  // if(who == "avatar") {
+  //   const info = webSockets.get(ws);
+  //   const room = rooms.get(info.id);
+  //   if (room) {
+  //     room.forEach( slot => {
+  //       if(slot.who != "avatar")//아바타외 알림.
+  //         disconnect_room(slot.ws, info.id, slot.who);
+  //     });
+  //   }
+  // }
+  const info = webSockets.get(ws);
+  if(info) {
+    const room = rooms.get(info.id);
+    if (room) {
+      room.forEach( slot => {
+        if(slot.who != info.who)//자신외 알림.
+          disconnect_room(slot.ws, info.id, slot.who);
+      });
+    }
+  }
 }
 
 function remove(ws: WebSocket): void {
-}
-
-function remove(ws: WebSocket): void {
-  const connectionIds = clients.get(ws);
-  connectionIds.forEach(connectionId => {
-    const pair = connectionPair.get(connectionId);
-    if (pair) {
-      const otherSessionWs = pair[0] == ws ? pair[1] : pair[0];
-      if (otherSessionWs) {
-        otherSessionWs.send(JSON.stringify({ type: "disconnect", connectionId: connectionId }));
+  // const who = ws.protocol;
+  // if(who == "avatar") {
+    const info = webSockets.get(ws);
+    if(info) {
+      const room = rooms.get(info.id);
+      if (room) {
+        room.forEach( slot => {
+          disconnect_room(slot.ws, info.id, slot.who);//모두에게 알림.
+        });
       }
     }
-    connectionPair.delete(connectionId);
-  });
-
-  clients.delete(ws);
+  // }
+  webSockets.delete(ws);
 }
+
+// function remove(ws: WebSocket): void {
+//   const connectionIds = clients.get(ws);
+//   connectionIds.forEach(connectionId => {
+//     const pair = connectionPair.get(connectionId);
+//     if (pair) {
+//       const otherSessionWs = pair[0] == ws ? pair[1] : pair[0];
+//       if (otherSessionWs) {
+//         otherSessionWs.send(JSON.stringify({ type: "disconnect", connectionId: connectionId }));
+//       }
+//     }
+//     connectionPair.delete(connectionId);
+//   });
+
+//   clients.delete(ws);
+// }
 
 function onReqAvatarList(ws: WebSocket): void {
   const avatarList: string[] = [];
@@ -84,9 +133,12 @@ function connect_room(ws: WebSocket, id: string, who: string): void {
   if(who == "avatar") {
     if (rooms.has(id)) {//방이 이미 존재함.
       send_error(ws, `${id}: This room already exists.`);
-      return;
+
+
+      //idevkim 일단 고~~ 추후 확인
+      //return;
     }
-    rooms.set(id, [{ws: ws, who: who}, null, null]);//방 생성 : 아바타이름으로...created_room      
+    rooms.set(id, [{ws: ws, who: who}, null, null]);//방 생성 : 아바타이름으로...created_room
   }
   const room = rooms.get(id);
   if (!room) {//방이 존재하지 않음.
@@ -100,6 +152,10 @@ function connect_room(ws: WebSocket, id: string, who: string): void {
     if(slot)//모두에게 알림. 중요!특히 "avatar"에게 알려 offer를 보내도록함.
       slot.ws.send(JSON.stringify({ type: "connect", id: id, who: who, polite: true }));//polite 아직 정확한 의미, 용도를 모르겠음.  
   });
+  //비정상종료후 재접속후 방생성 정보를 이용( function add(), remove() 참조 )
+  let info: IInfo = { id: id, who: who };
+  webSockets.set(ws, info);
+  ///////////////////////////////////////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////////
 function onDisconnect(ws: WebSocket, msg: any): void {
@@ -130,6 +186,10 @@ function disconnect_room(ws: WebSocket, id: string, who: string): void {
   } else { //방이 존재하지 않음.
     send_error(ws, `${id}: This room is not found.`);
   }
+  //비정상종료후 재접속후 방생성 정보를 이용( function add(), remove() 참조 )
+  let info: IInfo = null;
+  webSockets.set(ws, info);
+  ///////////////////////////////////////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////////
 function onOffer(ws: WebSocket, msg: any): void {//ws: "avatar", msg: id, sdp, type
@@ -139,7 +199,7 @@ function onOffer(ws: WebSocket, msg: any): void {//ws: "avatar", msg: id, sdp, t
   const newOffer = new Offer(msg.sdp, Date.now(), false);
 
   const room = rooms.get(id);
-  const otherWs = room[0].ws == ws ? room[1].ws : room[0].ws;
+  const otherWs = room[0].ws == ws ? room[1].ws : room[0].ws;//room[1],room[2] null이면 에러!!
   if (otherWs) {
     newOffer.polite = true;
     // otherWs.send(JSON.stringify({ from: id, to: "", type: "offer", data: newOffer }));
