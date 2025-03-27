@@ -52,32 +52,34 @@ function add(ws: WebSocket): void {
   //     });
   //   }
   // }
-  const info = webSockets.get(ws);
-  if(info) {
-    const room = rooms.get(info.id);
-    if (room) {
-      room.forEach( slot => {
-        if(slot.who != info.who)//자신외 알림.
-          disconnect_room(slot.ws, info.id, slot.who);
-      });
-    }
-  }
+  console.log(`소켓접속 : ws.protocol => ${ws.protocol}`);
+  // const info = webSockets.get(ws);
+  // if(info) {
+  //   const room = rooms.get(info.id);
+  //   if (room) {
+  //     room.forEach( slot => {
+  //       if(slot.who != info.who)//자신외 알림.
+  //         disconnect_room(slot.ws, info.id, slot.who);
+  //     });
+  //   }
+  // }
 }
 
 function remove(ws: WebSocket): void {
-  // const who = ws.protocol;
-  // if(who == "avatar") {
-    const info = webSockets.get(ws);
-    if(info) {
-      const room = rooms.get(info.id);
-      if (room) {
-        room.forEach( slot => {
-          disconnect_room(slot.ws, info.id, slot.who);//모두에게 알림.
-        });
-      }
-    }
-  // }
-  webSockets.delete(ws);
+  console.log(`소켓종료 : ws.protocol => ${ws.protocol}`);
+  // // const who = ws.protocol;
+  // // if(who == "avatar") {
+  //   const info = webSockets.get(ws);
+  //   if(info) {
+  //     const room = rooms.get(info.id);
+  //     if (room) {
+  //       room.forEach( slot => {
+  //         disconnect_room(slot.ws, info.id, slot.who);//모두에게 알림.
+  //       });
+  //     }
+  //   }
+  // // }
+  // webSockets.delete(ws);
 }
 
 // function remove(ws: WebSocket): void {
@@ -132,11 +134,9 @@ function onConnect(ws: WebSocket, msg: any): void {
 function connect_room(ws: WebSocket, id: string, who: string): void {
   if(who == "avatar") {
     if (rooms.has(id)) {//방이 이미 존재함.
-      // send_error(ws, `${id}: This room already exists.`);
-
-
+      send_error(ws, `${id}: This room already exists.`);
       //idevkim 일단 고~~ 추후 확인
-      //return;
+      return;
     }
     rooms.set(id, [{ws: ws, who: who}, null, null]);//방 생성 : 아바타이름으로...created_room
   }
@@ -153,8 +153,8 @@ function connect_room(ws: WebSocket, id: string, who: string): void {
       slot.ws.send(JSON.stringify({ type: "connect", id: id, who: who, polite: true }));//polite 아직 정확한 의미, 용도를 모르겠음.  
   });
   //비정상종료후 재접속후 방생성 정보를 이용( function add(), remove() 참조 )
-  let info: IInfo = { id: id, who: who };
-  webSockets.set(ws, info);
+  // let info: IInfo = { id: id, who: who };
+  // webSockets.set(ws, info);
   ///////////////////////////////////////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////////
