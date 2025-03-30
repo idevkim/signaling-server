@@ -52,7 +52,7 @@ function add(ws: WebSocket): void {
   //     });
   //   }
   // }
-  console.log(`소켓접속 : ws.protocol => ${ws.protocol}`);
+  // console.log(`소켓접속 : ws.protocol => ${ws.protocol}`);
   // const info = webSockets.get(ws);
   // if(info) {
   //   const room = rooms.get(info.id);
@@ -66,7 +66,7 @@ function add(ws: WebSocket): void {
 }
 
 function remove(ws: WebSocket): void {
-  console.log(`소켓종료 : ws.protocol => ${ws.protocol}`);
+  // console.log(`소켓종료 : ws.protocol => ${ws.protocol}`);
   // // const who = ws.protocol;
   // // if(who == "avatar") {
   //   const info = webSockets.get(ws);
@@ -124,7 +124,7 @@ function onConnect(ws: WebSocket, msg: any): void {
     case "player":
     case "dashboard"://observer
       connect_room(ws, msg.id, msg.who);
-      console.log(`${msg.who}:${msg.id}:::onConnect()`);
+      console.log(`onConnect()::${msg.id}::${msg.who}`);
       break;
     default:
       send_error(ws, `${msg.id}: onConnect() who가 필요합니다(대소문자확인).`);
@@ -134,9 +134,17 @@ function onConnect(ws: WebSocket, msg: any): void {
 function connect_room(ws: WebSocket, id: string, who: string): void {
   if(who == "avatar") {
     if (rooms.has(id)) {//방이 이미 존재함.
-      send_error(ws, `${id}: This room already exists.`);
-      //idevkim 일단 고~~ 추후 확인
-      return;
+      // 에러 보내지 않고 
+      // 일단 고~~ 추후 확인
+      // 그냥 아바타만 덮어쓰자.
+      const room = rooms.get(id);
+      // rooms.set(id, [{ws: ws, who: who}, room[1], room[2]]);
+      if(room[1]) room[1].ws.send(JSON.stringify({ type: "disconnect", id: id, who: who }));
+      if(room[2]) room[2].ws.send(JSON.stringify({ type: "disconnect", id: id, who: who }));
+      //////////////////////////////////////////////////////
+
+      // send_error(ws, `${id}: This room already exists.`);
+      // return;
     }
     rooms.set(id, [{ws: ws, who: who}, null, null]);//방 생성 : 아바타이름으로...created_room
   }
@@ -164,7 +172,7 @@ function onDisconnect(ws: WebSocket, msg: any): void {
     case "player":
     case "dashboard"://observer
       disconnect_room(ws, msg.id, msg.who);
-      console.log(`${msg.who}:${msg.id}:::onDisconnect()`);
+      console.log(`onDisconnect()::${msg.id}::${msg.who}`);
       break;
     default:
       send_error(ws, `${msg.id}: onDisconnect() who가 필요합니다(대소문자확인).`);
@@ -186,10 +194,10 @@ function disconnect_room(ws: WebSocket, id: string, who: string): void {
   } else { //방이 존재하지 않음.
     send_error(ws, `${id}: This room is not found.`);
   }
-  //비정상종료후 재접속후 방생성 정보를 이용( function add(), remove() 참조 )
-  let info: IInfo = null;
-  webSockets.set(ws, info);
-  ///////////////////////////////////////////////////////
+  // //비정상종료후 재접속후 방생성 정보를 이용( function add(), remove() 참조 )
+  // let info: IInfo = null;
+  // webSockets.set(ws, info);
+  // ///////////////////////////////////////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////////
 function onOffer(ws: WebSocket, msg: any): void {//ws: "avatar", msg: id, sdp, type
@@ -222,7 +230,7 @@ function onAnswer(ws: WebSocket, msg: any): void {
   const room = rooms.get(id);
   const otherWs = room[0].ws == ws ? room[1].ws : room[0].ws;
   // otherWs.send(JSON.stringify({ from: id, to: "", type: "answer", data: newAnswer }));
-  otherWs.send(JSON.stringify({ from: id, to: "", type: "answer", sdp: msg.sdp }));
+  otherWs.send(JSON.stringify({ from: id, to: "", type: "answer", id: id, who: "who who who who who", sdp: msg.sdp }));
 }
 
 function onCandidate(ws: WebSocket, msg: any): void {//1.ws::player, msg::data{condidate,id,sdpMid,sdpMidLine},from, type
@@ -244,7 +252,7 @@ function onCandidate(ws: WebSocket, msg: any): void {//1.ws::player, msg::data{c
   const room = rooms.get(id);
   const otherWs = room[0].ws == ws ? room[1].ws : room[0].ws;
   if (otherWs) {
-    otherWs.send(JSON.stringify({ from: id, to: "", type: "candidate", candidate: msg.candidate, sdpMLineIndex: msg.sdpMLineIndex, sdpMid: msg.sdpMid }));
+    otherWs.send(JSON.stringify({ from: id, to: "", type: "candidate", id: id, who: "who who who", candidate: msg.candidate, sdpMLineIndex: msg.sdpMLineIndex, sdpMid: msg.sdpMid }));
   }
 }
 

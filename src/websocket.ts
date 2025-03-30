@@ -31,30 +31,6 @@ export default class WSSignaling {
           return;
         }
 
-        switch (msg.janus) {
-          case "create":
-            handler.onCreate(ws, msg);//return rooms.key(방이름)
-            break;
-          case "connect":
-            handler.onConnect(ws, msg);
-            break;
-          case "disconnect":
-            handler.onDisconnect(ws, msg);
-            break;
-          case "offer":
-            handler.onOffer(ws, msg);
-            break;
-          case "answer":
-            handler.onAnswer(ws, msg);
-            break;
-          case "candidate":
-            handler.onCandidate(ws, msg);
-            break;
-          default:
-            break;
-        }
-
-
         switch (msg.type) {
           case "reqAvatarList":
             handler.onReqAvatarList(ws);//return rooms.key(방이름)
