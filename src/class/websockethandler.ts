@@ -124,7 +124,6 @@ function onConnect(ws: WebSocket, msg: any): void {
     case "player":
     case "dashboard"://observer
       connect_room(ws, msg.id, msg.who);
-      console.log(`onConnect()::${msg.id}::${msg.who}`);
       break;
     default:
       send_error(ws, `${msg.id}: onConnect() who가 필요합니다(대소문자확인).`);
@@ -164,6 +163,8 @@ function connect_room(ws: WebSocket, id: string, who: string): void {
   // let info: IInfo = { id: id, who: who };
   // webSockets.set(ws, info);
   ///////////////////////////////////////////////////////
+  //idevkim : 최종결과
+  console.log(`connect_room(${id},${who})=> room[${room[0]?room[0].who:null},${room[1]?room[1].who:null},${room[2]?room[2].who:null}]`);  
 }
 ////////////////////////////////////////////////////////////////////////////////////
 function onDisconnect(ws: WebSocket, msg: any): void {
@@ -172,7 +173,6 @@ function onDisconnect(ws: WebSocket, msg: any): void {
     case "player":
     case "dashboard"://observer
       disconnect_room(ws, msg.id, msg.who);
-      console.log(`onDisconnect()::${msg.id}::${msg.who}`);
       break;
     default:
       send_error(ws, `${msg.id}: onDisconnect() who가 필요합니다(대소문자확인).`);
@@ -198,6 +198,8 @@ function disconnect_room(ws: WebSocket, id: string, who: string): void {
   // let info: IInfo = null;
   // webSockets.set(ws, info);
   // ///////////////////////////////////////////////////////
+  //idevkim : 최종결과
+  console.log(`disconnect_room(${id},${who})=> room[${room[0]?room[0].who:null},${room[1]?room[1].who:null},${room[2]?room[2].who:null}]`);
 }
 ////////////////////////////////////////////////////////////////////////////////////
 function onOffer(ws: WebSocket, msg: any): void {//ws: "avatar", msg: id, sdp, type

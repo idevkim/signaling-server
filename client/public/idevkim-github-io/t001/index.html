@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://unpkg.com/mqtt@4.1.0/dist/mqtt.min.js"></script>
+  <script src="https://kit.fontawesome.com/8c8bbe3334.js" crossorigin="anonymous"></script>
+  <title>WebRTC</title>
+  <style>
+    html {
+      font-family: "Calibri", sans-serif;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    broker : <p id="broker"></p>
+    timer : <p id="timer"></p>
+  </div>
+  <div>
+    device-id : <p id="device-id"></p>
+    status : <p id="status"></p>
+  </div>
+  <div>
+    message : <p id="message"></p>
+  </div>  
+
+
+  <script>
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const deviceId = urlParams.get('id');
+
+    var hasVolume = false;
+    var isMuted = false;
+    var offerId = Math.floor((Math.random() * 1000) + 1);
+    var answerId = Math.floor((Math.random() * 1000) + 1);
+    var closeId = Math.floor((Math.random() * 1000) + 1);
+    
+    var brokerIdx = 3;
+    var broker = ""
+    var resultTopic = ""
+    var invokeTopic = ""
+    const clientId = "idevkim-chrome"
+    const username = "idevkim-chrome"
+    const password = "idevkim"
+    if(brokerIdx==1) {
+      broker = "wss://broker.emqx.io:8084/mqtt"
+      resultTopic = "/webrtc/" + deviceId + "/jsonrpc"
+      invokeTopic = "/webrtc/" + deviceId + "/jsonrpc-reply"
+    } else if(brokerIdx==2) {
+      broker = "wss://libpeer.com:8084/mqtt"
+      resultTopic = "/public/" + deviceId + "/result"
+      invokeTopic = "/public/" + deviceId + "/invoke"
+    } else if(brokerIdx==3) {
+      //broker = "mqtt://t5ed9f11.ala.dedicated.aws.emqxcloud.com:1883"
+      broker = "wss://t5ed9f11.ala.dedicated.aws.emqxcloud.com:8084/mqtt"
+      //broker = 'mqtt://t5ed9f11.ala.dedicated.aws.emqxcloud.com:1883'
+      resultTopic = "/public/" + deviceId + "/result"
+      invokeTopic = "/public/" + deviceId + "/invoke"
+    }
+
+    document.getElementById('broker').innerHTML = broker;
+    document.getElementById('device-id').innerHTML = deviceId;
+
+    window.onload = function () {
+      if (deviceId == undefined) {
+      }
+    }
+
+    function connect() {
+      // window.location.href = window.location.href + "?deviceId=" + document.getElementById('device-id-input').value;
+    }
+
+    var options = {
+      keepalive: 600,
+    }
+
+    //const client = mqtt.connect(broker)
+    //mqtt://t5ed9f11.ala.dedicated.aws.emqxcloud.com:1883
+    //ws://t5ed9f11.ala.dedicated.aws.emqxcloud.com:8083
+    //const client = mqtt.connect("mqtt://t5ed9f11.ala.dedicated.aws.emqxcloud.com:1883")
+    const client = mqtt.connect(broker, {
+      clientId,
+      username,
+      password,
+      // ...other options
+    })
+    client.on('connect', function () {
+      console.log(`connected`)//-reply
+      client.subscribe(resultTopic, (err) => { })
+
+      publish_timer()//2초간격으로 발행.
+    })
+
+    client.on('message', function (topic, message) {
+      let msg = JSON.parse(message.toString())
+      console.log(msg)
+      console.log(msg.sec)
+      document.getElementById('message').innerHTML = msg;
+      if (msg.id == offerId) {
+      } else if (msg.id == answerId) {
+        log('receive answer ok')
+      }
+    })
+
+    function publish_timer() {
+      var sec = 30;
+      var timer = setInterval(function () {
+          
+        //발행. resultTopic
+        //////////////////////////////////////
+        // client.publish('webrtc/' + deviceId + '/jsonrpc', JSON.stringify({
+        client.publish(resultTopic, JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'offer',
+          id: offerId,
+          sec: sec,
+        }), { qos: 2 })
+        //////////////////////////////////////
+        document.getElementById('timer').innerHTML = '00:' + sec;
+        sec--;
+        if (sec < 0) {
+          clearInterval(timer);
+        }
+      }, 1000);
+    }
+
+
+  </script>
+
+</body>
+
+</html>

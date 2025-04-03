@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://unpkg.com/mqtt@4.1.0/dist/mqtt.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css">
+  <title>libpeer test</title>
+  <style>
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">libpeer test</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
+        aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor03">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/sepfy/libpeer">Github</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://ko-fi.com/sepfy95">Sponsor</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-4">
+    <div class="mb-4">
+      <div class="row mb-2">
+        <div class="col-2 d-flex align-items-center gap-4">
+          <div class="h7 mb-0">URL:</div>
+          <div class="h7 mb-0" id="device-url"></div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-2 d-flex align-items-center gap-4">
+          <p class="h7 mb-0">Status:</p>
+          <p class="h7 mb-0" id="status">Disconnected</p>
+        </div>
+      </div>
+      <div class="row mb-2" id="select_room">
+        <div class="col-12 d-flex align-items-center gap-4">
+          <label class="form-check-label" for="roomList">Select id(Room):</label>
+          <form>
+            <div class="form-group">
+              <select class="form-control" id="roomList">
+                <option selected value="tank001">tank001</option>
+                <option value="tank002">tank002</option>
+                <option value="tank003">tank003</option>
+              </select>
+            </div>
+          </form>
+          <button class="btn btn-outline-dark" id="refresh_room" disabled>Refresh</button>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-3 d-flex align-items-center gap-4">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="camera-switch">
+            <label class="form-check-label" for="camera-switch">Cam</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="microphone-switch">
+            <label class="form-check-label" for="microphone-switch">Mic</label>
+          </div>
+          <button class="btn btn-outline-dark" id="connect">Connect</button>
+          <button class="btn btn-outline-dark" id="disConnect">DisConnect</button>
+        </div>
+
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="p-3 border bg-light text-center">
+          <h5>Video</h5>
+          <video controls id="video-stream" class="w-100" style="max-height: 400px; display: none">
+            <p>Your browser does not support the video element.</p>
+          </video>
+          <img id="img-stream" class="w-100">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="p-3 border bg-light text-center mb-3">
+          <h5>Audio</h5>
+          <audio controls id="audio-stream" class="w-100">
+            <p>Your browser does not support the audio element.</p>
+          </audio>
+        </div>
+
+        <div class="p-3 border bg-light text-center">
+          <h5>DataChannel</h5>
+          <textarea id="datachannel-input" class="form-control" rows="12"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    
+    const queryString = window.location.search;//
+    const urlParams = new URLSearchParams(queryString);//
+    const locate = urlParams.get("locate");//회사,집 :: 위치에 따라 ip변경
+
+    var id = "tank001";
+    var who = "player";
+    var state = "close";//connected, disconnected
+    var dataChannelName = "libpeer";
+
+    window.onload = function () {
+      // 무한반복 에러조심.
+      // if (locate == undefined) {
+      //   const defaultLocate = "회사";
+      //   window.location.href = window.location.href + "?locate=" + defaultLocate;
+      // }
+
+      document.getElementById("device-url").innerHTML = "http://127.0.0.1:8082...카메라문제 ip주의";
+
+      const roomListSelect = document.querySelector('select#roomList');
+      id = roomListSelect.value;
+      updateTextarea(id);
+      roomListSelect.addEventListener('change', (event) => {
+        id = event.target.value;
+        updateTextarea(id);
+        // if(connectionId == "")  connectButton.disabled = true;
+        // else                    connectButton.disabled = false;
+      });
+
+      const canvas = document.createElement('canvas')
+      canvas.width = 640
+      canvas.height = 480
+
+      const ctx = canvas.getContext('2d')
+      ctx.fillStyle = 'rgba(200, 200, 200, 100)'
+      ctx.fillRect(0, 0, 640, 480)
+
+      const img = new Image(640, 480)
+      img.src = canvas.toDataURL()
+
+      document.getElementById('img-stream').src = img.src;
+    }
+
+    // RTCPeerConnection : pc
+    /////////////////////////////////////////////////////////////////////
+    var pc = new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+      ],
+    });
+
+    pc.ondatachannel = () => {
+      console.log('ondatachannel');
+    }
+
+    pc.ontrack = (e) => {
+      if (e.track.kind == "video") {
+        var el = document.getElementById('video-stream');
+        var newStream = new MediaStream();
+        newStream.addTrack(e.track);
+        el.srcObject = newStream;
+        el.autoplay = true
+        el.controls = false
+        el.muted = true
+        document.getElementById("img-stream").style.display = "none";
+        document.getElementById("video-stream").style.display = "block";
+      } else if (e.track.kind == "audio") {
+        var el = document.getElementById("audio-stream");
+        var newStream = new MediaStream();
+        newStream.addTrack(e.track);
+        el.srcObject = newStream;
+        el.autoplay = true
+        el.controls = true
+        el.muted = true
+      }
+    }
+
+    pc.oniceconnectionstatechange = (e) => {
+      document.getElementById("status").innerHTML = pc.iceConnectionState;
+    }
+
+    pc.onicecandidate = (e) => {
+      //console.log(e)
+    }
+
+    pc.onicegatheringstatechange = () => {
+      if (pc.iceGatheringState === "complete") {
+        sendAnswer(id, pc.localDescription.sdp);
+      }
+    };
+    /////////////////////////////////////////////////////////////////////
+
+
+
+    // websocket
+    ////////////////////////////////////////////////////////////////////
+    let websocketUrl = "ws://" + location.host;
+    const protocols = "player"//player 정보만 보낸다. id는 아직 미정이고 플랫폼은 다양함으로.. 
+    const websocket = new WebSocket(websocketUrl, protocols);//signaling server에서 누구의 소켓인가확인할때 필요.
+
+    websocket.onopen = () => {
+      this.isWsOpen = true;
+      // this.dispatchEvent(new CustomEvent('wsOpen', {}));//idevkim 소켓생성후 자동처리시작
+    };
+
+    websocket.onclose = () => {
+      this.isWsOpen = false;
+      // this.dispatchEvent(new CustomEvent('wsClose', {}));//idevkim
+    };
+
+    websocket.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      if (!msg || !this) {
+        return;
+      }
+
+      console.log(msg);
+      // console.log('msg.type : %s',msg.type);
+
+      switch (msg.type) {
+        case "connect":
+          console.log("websocket.onmessage :: connect");
+          state = "connected";
+          // this.dispatchEvent(new CustomEvent('connect', { detail: msg }));
+          break;
+        case "disconnect":
+          console.log("websocket.onmessage :: disconnect");
+          state = "disconnected";
+          window.location.reload();//간단히 리로드로 처리.
+          // this.dispatchEvent(new CustomEvent('disconnect', { detail: msg }));
+          break;
+        case "offer":
+          // this.dispatchEvent(new CustomEvent('offer', { detail: { id: msg.from, sdp: msg.sdp, polite: msg.polite } }));
+          //   let msg = JSON.parse(message.toString())
+          //   if (msg.id == offerId) {
+          //     console.log(msg.result)
+          pc.setRemoteDescription({ type: "offer", sdp: msg.sdp });
+          pc.createAnswer().then(d => pc.setLocalDescription(d));
+          //   }          
+          break;
+        case "answer":
+          // this.dispatchEvent(new CustomEvent('answer', { detail: { id: msg.from, sdp: msg.sdp } }));
+          break;
+        case "candidate":
+          // this.dispatchEvent(new CustomEvent('candidate', { detail: { id: msg.from, candidate: msg.candidate, sdpMLineIndex: msg.sdpMLineIndex, sdpMid: msg.sdpMid } }));
+          break;
+        case "error":
+          // this.dispatchEvent(new CustomEvent('error', { detail: msg }));
+          break;
+        case "gotAvatarList":
+          // this.dispatchEvent(new CustomEvent('gotAvatarList', { detail: msg }));
+          break;
+        default:
+          break;
+      }
+    };
+
+    // datachannel
+    ////////////////////////////////////////////////////////////////////
+    const datachannel = pc.createDataChannel(dataChannelName)
+
+    datachannel.onclose = () => {
+      console.log('datachannel has closed');
+    }
+
+    datachannel.onopen = () => {
+      console.log('datachannel has opened');
+      console.log('sending ping');
+      var cnt = 0;
+      setInterval(() => {
+        var data = "ping : " + (cnt += 1);
+        // console.log('sending ping');
+        updateTextarea(data);
+        datachannel.send(data);
+      }, 1000);
+    }
+
+    datachannel.onmessage = (e) => {
+      if (e.data.byteLength === undefined) {
+        console.log(e.data);
+        updateTextarea("<<<" + e.data);
+      } else {
+        // is binary data. mjpeg stream
+        // console.log(e.data.byteLength);
+        var arrayBufferView = new Uint8Array(e.data);
+        var blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+        var urlCreator = window.URL || window.webkitURL;
+        var imageUrl = urlCreator.createObjectURL(blob);
+
+        var imageElement = document.getElementById('img-stream');
+        imageElement.src = imageUrl;
+      }
+    }
+    ////////////////////////////////////////////////////////////////////
+
+    // function
+    ////////////////////////////////////////////////////////////////////
+    function updateTextarea(text) {
+      const currentTime = new Date().toLocaleTimeString();
+      const timestamp = `[${currentTime}] `;
+      const textarea = document.getElementById("datachannel-input");
+      textarea.value += (textarea.value ? "\n" : "") + timestamp + text;
+      textarea.scrollTop = textarea.scrollHeight;
+    }
+
+    function sendAnswer(id, sdp) {
+      const data = { 'sdp': sdp, 'id': id };
+      const sendJson = JSON.stringify({ type: "answer", from: id, data: data });
+      console.log(sendJson);
+      websocket.send(sendJson);
+    }
+
+    function sendConnection(id, who) {
+      const sendJson = JSON.stringify({ type: "connect", id: id, who: who });
+      websocket.send(sendJson);
+    }
+
+    function sendDisConnection(id, who) {
+      const sendJson = JSON.stringify({ type: "disconnect", id: id, who: who });
+      websocket.send(sendJson);
+    }
+
+    // events
+    ////////////////////////////////////////////////////////////////////
+    document.getElementById("connect").addEventListener("click", () => {
+
+      const cameraSwitch = document.getElementById("camera-switch");
+      const microphoneSwitch = document.getElementById("microphone-switch");
+      const constraints = {
+        video: cameraSwitch.checked,
+        audio: microphoneSwitch.checked,
+      }
+
+      if (constraints.video || constraints.audio) {
+        navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+          stream.getTracks().forEach(track => pc.addTrack(track, stream));
+        }).catch((e) => {
+          alert(e)
+        });
+      }
+      sendConnection(id, who);
+    })
+
+    document.getElementById("disConnect").addEventListener("click", () => {
+      sendDisConnection(id, who);
+    })
+
+  </script>
+</body>
+
+</html>
